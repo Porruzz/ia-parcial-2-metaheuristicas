@@ -1,17 +1,17 @@
-# Evaluación Parcial 2: Fundamentos de Inteligencia Artificial 🧠⚙️
+# Evaluación Parcial 2: Fundamentos de Inteligencia Artificial 
 
 Solución integral, rigurosa, documentada y completamente verificada para el **Parcial 2** del curso de **Fundamentos de Inteligencia Artificial (2026)**, impartido por el profesor **Joaquín F. Sánchez**.
 
 ---
 
-## 👥 Integrantes
+## Integrantes
 * **Santiago Parra Acuña**
 * **Sergio Morales**
 * **Angel Robles**
 
 ---
 
-## 📌 1. Estructura del Repositorio
+## 1. Estructura del Repositorio
 
 ```text
 Parcial #2/
@@ -31,7 +31,7 @@ Parcial #2/
 
 ---
 
-## 🚀 2. Instrucciones de Instalación y Ejecución
+## 2. Instrucciones de Instalación y Ejecución
 
 ### Requisitos del Sistema
 * **Python 3.10+** (probado y validado en Python 3.12.10).
@@ -64,7 +64,7 @@ pip install numpy matplotlib nbformat nbconvert jupyter
 
 ---
 
-## 📖 3. Desarrollo y Solución Detallada por Puntos
+## 3. Desarrollo y Solución Detallada por Puntos
 
 ---
 
@@ -396,7 +396,7 @@ Minimizar $f(x, y) = x^2 + y^2$ en $[-5, 5]^2$, 10 partículas, $v_0 = 0$, $w=0.
 
 ---
 
-## 📊 4. Cuadro Comparativo Global de Metaheurísticas
+## 4. Cuadro Comparativo Global de Metaheurísticas
 
 | Algoritmo | Paradigma Bioinspirado | Tipo de Búsqueda | Mecanismo de Exploración | Mecanismo de Explotación | Tipo de Comunicación |
 | :--- | :--- | :--- | :--- | :--- | :--- |
