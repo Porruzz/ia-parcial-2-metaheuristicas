@@ -11,15 +11,36 @@ Solución integral, rigurosa, documentada y completamente verificada para el **P
 
 ---
 
-## 1. Estructura del Repositorio
+## 1. Estructura del Repositorio y Arquitectura Modular
 
 ```text
 Parcial #2/
 │
 ├── Parcial_2_IA.pdf            # Enunciado oficial de la evaluación
-├── solucion_parcial.py         # Motor algorítmico ejecutable en Python nativo / modular
+├── solucion_parcial.py         # Fachada principal (Facade Pattern) y CLI
 ├── Parcial_2_IA.ipynb          # Jupyter Notebook compilado con LaTeX, código y gráficos embebidos
 ├── README.md                   # Informe técnico exhaustivo y sustentación completa
+│
+├── src/                        # Paquete modular desacoplado con patrones de diseño GoF
+│   ├── __init__.py             # Exportación pública del paquete
+│   ├── core/                   # Núcleo y contratos base
+│   │   ├── __init__.py
+│   │   └── base.py             # Template Method (BaseOptimizer) y Value Object (OptimizationResult)
+│   ├── strategies/             # Patrón Strategy (GoF) para operadores intercambiables
+│   │   ├── __init__.py
+│   │   ├── genetic.py          # Selección (Ruleta), Cruce (Un punto) y Mutación (Bit-flip)
+│   │   └── cooling.py          # Programa de enfriamiento geométrico para Temple Simulado
+│   ├── solvers/                # Implementaciones concretas de metaheurísticas
+│   │   ├── __init__.py
+│   │   ├── genetic_algorithm.py   # Algoritmo Genético modular con inyección de estrategias
+│   │   ├── hill_climbing.py       # Ascenso de Colinas + función requerida por PDF
+│   │   ├── simulated_annealing.py # Temple Simulado con estrategia térmica desacoplada
+│   │   ├── ant_colony.py          # Colonia de Hormigas con modelo estigmérgico
+│   │   ├── particle_swarm.py      # Enjambre de Partículas 2D con fronteras y sincronismo
+│   │   └── factory.py             # Patrón Factory Method / Registry para instanciación dinámica
+│   └── utils/                  # Servicios transversales y presentación
+│       ├── __init__.py
+│       └── visualizer.py       # Servicio de graficación y exportación desacoplado (300 DPI)
 │
 └── images/                     # Figuras analíticas en alta resolución (300 DPI)
     ├── punto1_algoritmo_genetico.png   # Evolución de aptitud y sensibilidad estocástica (AG)
@@ -31,7 +52,29 @@ Parcial #2/
 
 ---
 
-## 2. Instrucciones de Instalación y Ejecución
+## 2. Patrones de Diseño Implementados (GoF)
+
+El proyecto fue refactorizado siguiendo principios SOLID y los siguientes patrones de diseño de la literatura de ingeniería de software (*Gang of Four*):
+
+1. **Patrón Template Method (Comportamiento):**
+   * Clase base `BaseOptimizer` en `src.core.base`.
+   * Define el esqueleto invariable del ciclo de optimización en el método `solve()` (`_initialize()` $\to$ bucle `_step()` $\to$ `_is_terminated()` $\to$ `_build_result()`), permitiendo que cada metaheurística implemente sus particularidades sin alterar el flujo orquestador.
+2. **Patrón Strategy (Comportamiento):**
+   * En `src.strategies.genetic`: Las clases `SelectionStrategy`, `CrossoverStrategy` y `MutationStrategy` desacoplan los operadores genéticos del motor principal. Se implementaron concretamente `RouletteWheelSelection`, `SinglePointCrossover` y `BitFlipMutation`.
+   * En `src.strategies.cooling`: `CoolingSchedule` y `GeometricCoolingSchedule` permiten intercambiar esquemas de enfriamiento térmico (lineal, logarítmico, geométrico) sin modificar el optimizador de Temple Simulado.
+3. **Patrón Factory Method / Registry (Creacional):**
+   * Clase `OptimizerFactory` en `src.solvers.factory`.
+   * Permite instanciar y configurar cualquier optimizador dinámicamente mediante identificadores (`"ga"`, `"hc"`, `"sa"`, `"aco"`, `"pso"`), cumpliendo con el principio Abierto/Cerrado (*Open/Closed Principle*).
+4. **Patrón Facade / Fachada (Estructural):**
+   * Módulo `solucion_parcial.py`.
+   * Actúa como fachada unificada de alto nivel frente a la terminal y el usuario, orquestando las llamadas a los diferentes solucionadores de `src.solvers` y coordinando la generación de gráficos a través de `ParcialVisualizer`.
+5. **Patrón Value Object (Estructural / DDD):**
+   * Clase inmutable `@dataclass(frozen=True) OptimizationResult` en `src.core.base`.
+   * Empaqueta de forma atómica y consistente el resultado final, la aptitud óptima, el historial temporal de convergencia, métricas de rendimiento y metadatos del algoritmo.
+
+---
+
+## 3. Instrucciones de Instalación y Ejecución
 
 ### Requisitos del Sistema
 * **Python 3.10+** (probado y validado en Python 3.12.10).
@@ -64,7 +107,7 @@ pip install numpy matplotlib nbformat nbconvert jupyter
 
 ---
 
-## 3. Desarrollo y Solución Detallada por Puntos
+## 4. Desarrollo y Solución Detallada por Puntos
 
 ---
 
@@ -396,7 +439,7 @@ Minimizar $f(x, y) = x^2 + y^2$ en $[-5, 5]^2$, 10 partículas, $v_0 = 0$, $w=0.
 
 ---
 
-## 4. Cuadro Comparativo Global de Metaheurísticas
+## 5. Cuadro Comparativo Global de Metaheurísticas
 
 | Algoritmo | Paradigma Bioinspirado | Tipo de Búsqueda | Mecanismo de Exploración | Mecanismo de Explotación | Tipo de Comunicación |
 | :--- | :--- | :--- | :--- | :--- | :--- |
